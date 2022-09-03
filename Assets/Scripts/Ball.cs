@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -16,17 +13,18 @@ public class Ball : MonoBehaviour
         _collider = GetComponent<CircleCollider2D>();
     }
 
-    public void push(Vector2 force)
+    public void Push(Vector2 force)
     {
+        ActivateRb();
         _rb.AddForce(force, ForceMode2D.Impulse);
     }
 
-    public void activateRb()
+    public void ActivateRb()
     {
         _rb.isKinematic = false;
     }
     
-    public void deactivateRb()
+    public void DeactivateRb()
     {
         _rb.velocity = Vector2.zero;
         _rb.angularVelocity = 0f;

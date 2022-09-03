@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Trajectory : MonoBehaviour
@@ -18,11 +15,11 @@ public class Trajectory : MonoBehaviour
 
    private void Start()
    {
-      hide();
-      prepareDots();
+      Hide();
+      PrepareDots();
    }
 
-   public void updateDots(Vector3 ballPos, Vector2 forceApplied)
+   public void UpdateDots(Vector3 ballPos, Vector2 forceApplied)
    {
       _timeStamp = _dotSpacing;
       for (int i = 0; i < _dotsNumber; i++)
@@ -36,7 +33,7 @@ public class Trajectory : MonoBehaviour
       }
    }
 
-   private void prepareDots()
+   private void PrepareDots()
    {
       _dotsList = new Transform[_dotsNumber];
       _dotPrefab.transform.localScale = Vector3.one * _dotMaxScale;
@@ -56,12 +53,12 @@ public class Trajectory : MonoBehaviour
       }
    }
 
-   public void show()
+   public void Show()
    {
       _dotsParent.gameObject.SetActive(true);
    }
    
-   public void hide()
+   public void Hide()
    {
       _dotsParent.gameObject.SetActive(false);
    }

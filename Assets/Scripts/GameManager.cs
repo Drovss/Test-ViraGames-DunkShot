@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,7 +32,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        _ball.deactivateRb();
+        _ball.DeactivateRb();
     }
 
     private void Update()
@@ -41,44 +40,44 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             _isDragging = true;
-            onDragStart();
+            OnDragStart();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             _isDragging = false;
-            onDragEnd();
+            OnDragEnd();
         }
 
         if (_isDragging)
         {
-            onDrag();
+            OnDrag();
         }
     }
 
-    private void onDragStart()
+    private void OnDragStart()
     {
-        _ball.deactivateRb();
+        _ball.DeactivateRb();
         _startPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
 
-        _trajectory.show();
+        _trajectory.Show();
     }
-    private void onDrag()
+    private void OnDrag()
     {
         _endPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
         _distance = Vector2.Distance(_startPoint, _endPoint);
         _direction = (_startPoint - _endPoint).normalized;
         _force = _direction * (_distance * _pushForce);
         
-        _trajectory.updateDots(_ball.Pos, _force);
+        _trajectory.UpdateDots(_ball.Pos, _force);
         
         Debug.DrawLine(_startPoint, _endPoint);
     }
-    private void onDragEnd()
+    private void OnDragEnd()
     {
-        _ball.activateRb();
-        _ball.push(_force);
+        _ball.ActivateRb();
+        _ball.Push(_force);
         
-        _trajectory.hide();
+        _trajectory.Hide();
     }
 }
