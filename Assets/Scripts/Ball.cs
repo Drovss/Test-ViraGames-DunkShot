@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    private Transform _tr;
     private Rigidbody2D _rb;
     private CircleCollider2D _collider;
 
@@ -9,6 +10,7 @@ public class Ball : MonoBehaviour
 
     private void Awake()
     {
+        _tr = GetComponent<Transform>();
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<CircleCollider2D>();
     }
@@ -26,8 +28,17 @@ public class Ball : MonoBehaviour
     
     public void DeactivateRb()
     {
+        _collider.enabled = false;
         _rb.velocity = Vector2.zero;
         _rb.angularVelocity = 0f;
         _rb.isKinematic = true;
+    }
+
+    public void SetPosition(Vector2 position, Vector2 center, float ballPositionOffset)
+    {
+        var dir = position - center;
+
+        _tr.position = position + dir.normalized * ballPositionOffset;
+        _tr.right = -dir.normalized;
     }
 }

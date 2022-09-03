@@ -3,7 +3,7 @@ using UnityEngine;
 public class Slingshot : MonoBehaviour
 {
     //[SerializeField] private LineRenderer[] _lineRenderers;
-    [SerializeField] private Transform[] _stripPositions;
+    //[SerializeField] private Transform[] _stripPositions;
     [SerializeField] private Transform _center;
     [SerializeField] private Transform _idlePosition;
     [SerializeField] private float _maxLength;
@@ -16,8 +16,8 @@ public class Slingshot : MonoBehaviour
     [SerializeField] private float _force;
 
     private Ball _ball;
-    private Rigidbody2D _ballRb;
-    private Collider2D _ballCol;
+    //private Rigidbody2D _ballRb;
+    //private Collider2D _ballCol;
     
     private bool _isMouseDown;
     private Vector3 _currentPosition;
@@ -56,14 +56,14 @@ public class Slingshot : MonoBehaviour
             RotateBasket();
             
             //ball
-            if (_ballCol)
-            {
-                _ballCol.enabled = true;
-            }
+            // if (_ballCol)
+            // {
+            //     _ballCol.enabled = true;
+            // }
         }
         else
         {
-            ResetStrips();
+            //ResetStrips();
         }
     }
 
@@ -104,7 +104,7 @@ public class Slingshot : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (_ballRb == null)
+        if (_ball == null)
         {
             return;
         }
@@ -117,7 +117,7 @@ public class Slingshot : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (_ballRb == null)
+        if (_ball == null)
         {
             return;
         }
@@ -126,7 +126,6 @@ public class Slingshot : MonoBehaviour
         _trajectory.Hide();
         //ball
         Shoot();
-        
     }
 
     private void ResetStrips()
@@ -141,14 +140,15 @@ public class Slingshot : MonoBehaviour
         // {
         //     _lineRenderers[i].SetPosition(1, position);
         // }
-
+    
         //ball
-        if (_ballRb)
+        if (_ball)
         {
-            var dir = position - _center.position;
-            var transform1 = _ballRb.transform;
-            transform1.position = position + dir.normalized * _ballPositionOffset;
-            transform1.right = -dir.normalized;
+            _ball.SetPosition(position, _center.position, _ballPositionOffset);
+            // var dir = position - _center.position;
+            // var transform1 = _ballRb.transform;
+            // transform1.position = position + dir.normalized * _ballPositionOffset;
+            // transform1.right = -dir.normalized;
         }
     }
 
@@ -157,12 +157,14 @@ public class Slingshot : MonoBehaviour
         var ball = Instantiate(_ballPrefab);
 
         _ball = ball.GetComponent<Ball>();
-        _ballRb = ball.GetComponent<Rigidbody2D>();
-        _ballCol = ball.GetComponent<Collider2D>();
+        //_ballRb = ball.GetComponent<Rigidbody2D>();
+        //_ballCol = ball.GetComponent<Collider2D>();
 
-        _ballCol.enabled = false;
+        //_ballCol.enabled = false;
         //_ballRb.isKinematic = true;
         _ball.DeactivateRb();
+        
+        
 
         ResetStrips();
     }
@@ -175,8 +177,9 @@ public class Slingshot : MonoBehaviour
         _ball.Push(ballForce);
         //_ballRb.velocity = ballForce;
 
-        _ballRb = null;
-        _ballCol = null;
+        _ball = null;
+        // _ballRb = null;
+        // _ballCol = null;
         Invoke(nameof(CreateBall), 2);
     }
     
