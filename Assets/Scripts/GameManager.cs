@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,13 +16,17 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+    
+    [SerializeField] private float _pushForce;
+    [SerializeField] private float _minForce;
+    [SerializeField] private float _maxForce;
 
-    [SerializeField] private Ball _ball;
-    [SerializeField] private Trajectory _trajectory;
-    [SerializeField] private float _pushForce = 4;
-
+    [HideInInspector] public UnityEvent  StartMoveEvent;
+    [HideInInspector] public UnityEvent <Vector2> PushEvent;
+    [HideInInspector] public UnityEvent <Vector2> UpdateTrajectotyEvent;
+    
     private Camera _camera;
-    private bool _isDragging = false;
+    private bool _isDragging;
 
     private Vector2 _startPoint;
     private Vector2 _endPoint;
@@ -32,7 +37,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        _ball.DeactivateRb();
     }
 
     private void Update()
@@ -57,10 +61,8 @@ public class GameManager : MonoBehaviour
 
     private void OnDragStart()
     {
-        _ball.DeactivateRb();
+        StartMoveEvent?.Invoke();
         _startPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
-
-        _trajectory.Show();
     }
     private void OnDrag()
     {
@@ -68,16 +70,27 @@ public class GameManager : MonoBehaviour
         _distance = Vector2.Distance(_startPoint, _endPoint);
         _direction = (_startPoint - _endPoint).normalized;
         _force = _direction * (_distance * _pushForce);
-        
-        _trajectory.UpdateDots(_ball.Pos, _force);
+
+        UpdateTrajectotyEvent?.Invoke(NormalizeForce(_force));
         
         Debug.DrawLine(_startPoint, _endPoint);
     }
     private void OnDragEnd()
     {
-        _ball.ActivateRb();
-        _ball.Push(_force);
-        
-        _trajectory.Hide();
+        PushEvent?.Invoke(NormalizeForce(_force));
+    }
+
+    private Vector2 NormalizeForce(Vector2 force)
+    {
+        if (force.magnitude > _maxForce)
+        {
+            force = force.normalized * _maxForce;
+        }
+        else if (force.magnitude < _minForce)
+        {
+            force = force.normalized;
+        }
+
+        return force;
     }
 }

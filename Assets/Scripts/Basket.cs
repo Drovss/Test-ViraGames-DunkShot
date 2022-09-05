@@ -2,97 +2,60 @@ using UnityEngine;
 
 public class Basket : MonoBehaviour
 {
-    [SerializeField] private Transform _center;
-    [SerializeField] private Transform _idlePosition;
-    [SerializeField] private float _maxLength;
-    [SerializeField] private Trajectory _trajectory;
-    [SerializeField] private Transform _basket;
     [SerializeField] private GameObject _ballPrefab;
-    [SerializeField] private float _ballPositionOffset;
-    [SerializeField] private float _force;
+    [SerializeField] private CatchZone _catchZone;
+    [SerializeField] private Transform _idlePosition;
+    [SerializeField] private Transform _basket;
+    [SerializeField] private Trajectory _trajectory;
 
     private Ball _ball;
-    private bool _isMouseDown;
-    private Vector3 _currentPosition;
-    private Camera _camera;
+
+    private void OnEnable()
+    {
+        GameManager.Instance.StartMoveEvent.AddListener(ShowTrajectory);
+        GameManager.Instance.PushEvent.AddListener(Shoot);
+        GameManager.Instance.UpdateTrajectotyEvent.AddListener(UpdateTrajectory);
+        GameManager.Instance.UpdateTrajectotyEvent.AddListener(RotateBasket);
+        
+        _catchZone.CatchBallEvent.AddListener(CatchBall);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.StartMoveEvent.RemoveListener(ShowTrajectory);
+        GameManager.Instance.PushEvent.RemoveListener(Shoot);
+        GameManager.Instance.UpdateTrajectotyEvent.RemoveListener(UpdateTrajectory);
+        GameManager.Instance.UpdateTrajectotyEvent.RemoveListener(RotateBasket);
+        
+        _catchZone.CatchBallEvent.RemoveListener(CatchBall);
+    }
 
     private void Start()
     {
-        _camera = Camera.main;
-
         CreateBall();
     }
 
-    private void Update()
+    private void ShowTrajectory()
     {
-        if (_isMouseDown)
-        {
-            SetBall();
-
-            Vector3 ballForce = (_currentPosition - _center.position) * (_force * -1);
-            _trajectory.UpdateDots(_ball.transform.position, ballForce);
-
-            RotateBasket();
-        }
-    }
-
-    private void SetBall()
-    {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 10;
-        _currentPosition = _camera.ScreenToWorldPoint(mousePosition);
-        var position = _center.position;
-        _currentPosition = position + Vector3.ClampMagnitude(_currentPosition - position, _maxLength);
-        SetStrips(_currentPosition);
-    }
-
-    private void RotateBasket()
-    {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 10;
-        _currentPosition = _camera.ScreenToWorldPoint(mousePosition);
-
-        var direction = _currentPosition - _basket.position;
-        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        _basket.rotation = Quaternion.Euler(0, 0, angle + 90);
-    }
-
-
-    private void OnMouseDown()
-    {
-        if (_ball == null)
-        {
-            return;
-        }
-
-        _isMouseDown = true;
+        if (!_ball) return;
+        
         _trajectory.Show();
     }
 
-    private void OnMouseUp()
+    private void UpdateTrajectory(Vector2 force)
     {
-        if (_ball == null)
-        {
-            return;
-        }
+        if (!_ball) return;
         
-        _isMouseDown = false;
-        _trajectory.Hide();
-        Shoot();
+        _trajectory.UpdateDots(_ball.transform.position, force);
     }
 
-    private void ResetStrips()
+    private void RotateBasket(Vector2 direction)
     {
-        _currentPosition = _idlePosition.position;
-        SetStrips(_currentPosition);
-    }
-    
-    private void SetStrips(Vector3 position)
-    {
-        if (_ball)
-        {
-            _ball.SetPosition(position, _center.position, _ballPositionOffset);
-        }
+        if (!_ball) return;
+        
+        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        _basket.rotation = Quaternion.Euler(0, 0, angle -90 );
+        _ball.transform.rotation = Quaternion.Euler(0, 0, angle -90 );
     }
 
     private void CreateBall()
@@ -100,15 +63,23 @@ public class Basket : MonoBehaviour
         var ball = Instantiate(_ballPrefab);
         _ball = ball.GetComponent<Ball>();
         _ball.DeactivateRb();
-        ResetStrips();
+        _ball.SetPosition(_idlePosition.position);
     }
 
-    private void Shoot()
+    private void Shoot(Vector2 force)
     {
-        _ball.ActivateRb();
-        Vector3 ballForce = (_currentPosition - _center.position) * (_force * -1);
-        _ball.Push(ballForce);
+        if (!_ball) return;
+        _trajectory.Hide();
+        _ball.Push(force);
         _ball = null;
-        Invoke(nameof(CreateBall), 2);
+        _catchZone.ActiveCollider();
+    }
+
+    private void CatchBall(Ball ball)
+    {
+        _ball = ball;
+        _ball.DeactivateRb();
+        _catchZone.DeactivateCollider();
+        _ball.SetPosition(_idlePosition.position);
     }
 }
