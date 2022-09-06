@@ -17,10 +17,15 @@ public class CatchZone : MonoBehaviour
         DeactivateCollider();
     }
 
-    public async void ActiveCollider()
+    public async void ActiveColliderDelay()
     {
         await Task.Delay(Mathf.RoundToInt(_delay * 1000));
         
+        _collider.enabled = true;
+    }
+    
+    public  void ActiveCollider()
+    {
         _collider.enabled = true;
     }
 

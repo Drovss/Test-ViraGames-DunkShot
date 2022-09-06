@@ -93,4 +93,7 @@ public class GameManager : MonoBehaviour
 
         return force;
     }
+    
+    
 }
+

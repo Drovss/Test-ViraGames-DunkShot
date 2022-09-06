@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Basket : MonoBehaviour
@@ -9,6 +11,8 @@ public class Basket : MonoBehaviour
     [SerializeField] private Trajectory _trajectory;
 
     private Ball _ball;
+
+    private BasketState _currentState;
 
     private void OnEnable()
     {
@@ -32,9 +36,31 @@ public class Basket : MonoBehaviour
 
     private void Start()
     {
-        CreateBall();
+        InitBehaviors();
+        SetBehaviorByDefault();
+        
+        
+        if (_currentState == BasketState.Pitcher)
+        {
+            CreateBall();
+        }
+        else
+        {
+            
+        }
     }
 
+    public void SetStatePitcher()
+    {
+        _currentState = BasketState.Pitcher;
+    }
+    
+    public void SetStateCatcher()
+    {
+        _currentState = BasketState.Catcher;
+    }
+
+    
     private void ShowTrajectory()
     {
         if (!_ball) return;
@@ -72,7 +98,7 @@ public class Basket : MonoBehaviour
         _trajectory.Hide();
         _ball.Push(force);
         _ball = null;
-        _catchZone.ActiveCollider();
+        _catchZone.ActiveColliderDelay();
     }
 
     private void CatchBall(Ball ball)
@@ -82,4 +108,55 @@ public class Basket : MonoBehaviour
         _catchZone.DeactivateCollider();
         _ball.SetPosition(_idlePosition.position);
     }
+
+    public enum BasketState
+    {
+        Pitcher,
+        Catcher
+    }
+
+
+    private Dictionary<Type, IBasketBehavior> _behaviors;
+    private IBasketBehavior _behaviorCurrent;
+
+    private void InitBehaviors()
+    {
+        _behaviors = new Dictionary<Type, IBasketBehavior>();
+        
+        _behaviors[typeof(BasketCatcher)] = new BasketCatcher();
+        _behaviors[typeof(BasketPitcher)] = new BasketPitcher();
+    }
+
+    private void SetBehavior(IBasketBehavior behavior)
+    {
+        _behaviorCurrent?.Exit();
+
+        _behaviorCurrent = behavior;
+        _behaviorCurrent.Enter();
+    }
+
+    private void SetBehaviorByDefault()
+    {
+        SetBehaviorCatcher();
+    }
+
+    private IBasketBehavior GetBehavior<T>() where T : IBasketBehavior
+    {
+        var type = typeof(T);
+        return _behaviors[type];
+    }
+
+    public void SetBehaviorCatcher()
+    {
+        var behavior = GetBehavior<BasketCatcher>();
+        SetBehavior(behavior);
+    }
+
+    public void SetBehaviorPitcher()
+    {
+        var behavior = GetBehavior<BasketPitcher>();
+        SetBehavior(behavior);
+    }
 }
+
+
