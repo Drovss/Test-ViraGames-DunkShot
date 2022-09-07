@@ -21,12 +21,12 @@ public class Spawner : MonoBehaviour
     {
         var position = _startPosition.position;
         var basket = Instantiate(_basketPrefab, position, Quaternion.identity).GetComponent<Basket>();
-        basket.SetStatePitcher();
+        basket.StateMachine.SetBehaviorPitcher();
         
         _currentVerticalPosition = position.y + _stepVertical;
         position = new Vector3(Random.Range(-_stepHorizontal, _stepHorizontal), _currentVerticalPosition, position.z);
         _currentVerticalPosition = position.y;
         basket = Instantiate(_basketPrefab, position, Quaternion.identity).GetComponent<Basket>();
-        basket.SetBehaviorCatcher();
+        basket.StateMachine.SetBehaviorCatcher();
     }
 }

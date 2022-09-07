@@ -2,64 +2,75 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Basket : MonoBehaviour
 {
     [SerializeField] private GameObject _ballPrefab;
-    [SerializeField] private CatchZone _catchZone;
     [SerializeField] private Transform _idlePosition;
     [SerializeField] private Transform _basket;
     [SerializeField] private Trajectory _trajectory;
+    [SerializeField] private CatchZone _catchZone;
 
+    public StateMachine StateMachine;
+    
     private Ball _ball;
 
-    private BasketState _currentState;
 
     private void OnEnable()
     {
-        GameManager.Instance.StartMoveEvent.AddListener(ShowTrajectory);
-        GameManager.Instance.PushEvent.AddListener(Shoot);
-        GameManager.Instance.UpdateTrajectotyEvent.AddListener(UpdateTrajectory);
-        GameManager.Instance.UpdateTrajectotyEvent.AddListener(RotateBasket);
+        // GameManager.Instance.StartMoveEvent.AddListener(ShowTrajectory);
+        // GameManager.Instance.PushEvent.AddListener(Shoot);
+        // GameManager.Instance.UpdateTrajectoryEvent.AddListener(UpdateTrajectory);
+        // GameManager.Instance.UpdateTrajectoryEvent.AddListener(RotateBasket);
         
         _catchZone.CatchBallEvent.AddListener(CatchBall);
     }
-
+    
     private void OnDisable()
     {
-        GameManager.Instance.StartMoveEvent.RemoveListener(ShowTrajectory);
-        GameManager.Instance.PushEvent.RemoveListener(Shoot);
-        GameManager.Instance.UpdateTrajectotyEvent.RemoveListener(UpdateTrajectory);
-        GameManager.Instance.UpdateTrajectotyEvent.RemoveListener(RotateBasket);
+        // GameManager.Instance.StartMoveEvent.RemoveListener(ShowTrajectory);
+        // GameManager.Instance.PushEvent.RemoveListener(Shoot);
+        // GameManager.Instance.UpdateTrajectoryEvent.RemoveListener(UpdateTrajectory);
+        // GameManager.Instance.UpdateTrajectoryEvent.RemoveListener(RotateBasket);
         
         _catchZone.CatchBallEvent.RemoveListener(CatchBall);
     }
 
-    private void Start()
+    private void Awake()
     {
-        InitBehaviors();
-        SetBehaviorByDefault();
-        
-        
-        if (_currentState == BasketState.Pitcher)
-        {
-            CreateBall();
-        }
-        else
-        {
-            
-        }
+        StateMachine = new StateMachine(this);
     }
 
-    public void SetStatePitcher()
+    public void Subscribe()
     {
-        _currentState = BasketState.Pitcher;
+        GameManager.Instance.StartMoveEvent.AddListener(ShowTrajectory);
+        GameManager.Instance.PushEvent.AddListener(Shoot);
+        GameManager.Instance.UpdateTrajectoryEvent.AddListener(UpdateTrajectory);
+        GameManager.Instance.UpdateTrajectoryEvent.AddListener(RotateBasket);
+        
+        //_catchZone.CatchBallEvent.AddListener(CatchBall);
+    }
+
+    public void Unsubscribe()
+    {
+        GameManager.Instance.StartMoveEvent.RemoveListener(ShowTrajectory);
+        GameManager.Instance.PushEvent.RemoveListener(Shoot);
+        GameManager.Instance.UpdateTrajectoryEvent.RemoveListener(UpdateTrajectory);
+        GameManager.Instance.UpdateTrajectoryEvent.RemoveListener(RotateBasket);
+        
+        //_catchZone.CatchBallEvent.RemoveListener(CatchBall);
+    }
+
+    public void ActiveCatcherCollider()
+    {
+        _catchZone.ActiveColliderDelay();
     }
     
-    public void SetStateCatcher()
+    public void DeactivateCatcherCollider()
     {
-        _currentState = BasketState.Catcher;
+        _catchZone.DeactivateCollider();
     }
-
     
     private void ShowTrajectory()
     {
@@ -84,7 +95,7 @@ public class Basket : MonoBehaviour
         _ball.transform.rotation = Quaternion.Euler(0, 0, angle -90 );
     }
 
-    private void CreateBall()
+    public void CreateBall()
     {
         var ball = Instantiate(_ballPrefab);
         _ball = ball.GetComponent<Ball>();
@@ -99,6 +110,8 @@ public class Basket : MonoBehaviour
         _ball.Push(force);
         _ball = null;
         _catchZone.ActiveColliderDelay();
+        
+        //StateMachine.SetBehaviorCatcher();
     }
 
     private void CatchBall(Ball ball)
@@ -107,55 +120,8 @@ public class Basket : MonoBehaviour
         _ball.DeactivateRb();
         _catchZone.DeactivateCollider();
         _ball.SetPosition(_idlePosition.position);
-    }
-
-    public enum BasketState
-    {
-        Pitcher,
-        Catcher
-    }
-
-
-    private Dictionary<Type, IBasketBehavior> _behaviors;
-    private IBasketBehavior _behaviorCurrent;
-
-    private void InitBehaviors()
-    {
-        _behaviors = new Dictionary<Type, IBasketBehavior>();
         
-        _behaviors[typeof(BasketCatcher)] = new BasketCatcher();
-        _behaviors[typeof(BasketPitcher)] = new BasketPitcher();
-    }
-
-    private void SetBehavior(IBasketBehavior behavior)
-    {
-        _behaviorCurrent?.Exit();
-
-        _behaviorCurrent = behavior;
-        _behaviorCurrent.Enter();
-    }
-
-    private void SetBehaviorByDefault()
-    {
-        SetBehaviorCatcher();
-    }
-
-    private IBasketBehavior GetBehavior<T>() where T : IBasketBehavior
-    {
-        var type = typeof(T);
-        return _behaviors[type];
-    }
-
-    public void SetBehaviorCatcher()
-    {
-        var behavior = GetBehavior<BasketCatcher>();
-        SetBehavior(behavior);
-    }
-
-    public void SetBehaviorPitcher()
-    {
-        var behavior = GetBehavior<BasketPitcher>();
-        SetBehavior(behavior);
+        //StateMachine.SetBehaviorPitcher();
     }
 }
 

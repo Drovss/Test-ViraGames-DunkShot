@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public UnityEvent  StartMoveEvent;
     [HideInInspector] public UnityEvent <Vector2> PushEvent;
-    [HideInInspector] public UnityEvent <Vector2> UpdateTrajectotyEvent;
+    [HideInInspector] public UnityEvent <Vector2> UpdateTrajectoryEvent;
     
     private Camera _camera;
     private bool _isDragging;
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         _direction = (_startPoint - _endPoint).normalized;
         _force = _direction * (_distance * _pushForce);
 
-        UpdateTrajectotyEvent?.Invoke(NormalizeForce(_force));
+        UpdateTrajectoryEvent?.Invoke(NormalizeForce(_force));
         
         Debug.DrawLine(_startPoint, _endPoint);
     }

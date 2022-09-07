@@ -6,16 +6,14 @@ using UnityEngine.Events;
 public class CatchZone : MonoBehaviour
 {
     [SerializeField] private float _delay;
-    
-    private Collider2D _collider;
+    [SerializeField] private Collider2D _collider;
     
     public UnityEvent <Ball> CatchBallEvent;
 
-    private void Start()
-    {
-        _collider = GetComponent<Collider2D>();
-        DeactivateCollider();
-    }
+    // private void Start()
+    // {
+    //     DeactivateCollider();
+    // }
 
     public async void ActiveColliderDelay()
     {

@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _delay: 1
+  _collider: {fileID: 8675330478164292318}
   CatchBallEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -482,10 +483,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ballPrefab: {fileID: 7229550228690965312, guid: 845be988bf3d36a40ad6a56fb4f5e78a, type: 3}
-  _catchZone: {fileID: 8675330478164292289}
   _idlePosition: {fileID: 8675330479643126444}
   _basket: {fileID: 8675330479548363695}
   _trajectory: {fileID: 8675330479249157639}
+  _catchZone: {fileID: 8675330478164292289}
 --- !u!68 &8675330479548363692
 EdgeCollider2D:
   m_ObjectHideFlags: 0
