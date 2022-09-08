@@ -1,6 +1,9 @@
-﻿public interface IBasketBehavior
+﻿namespace BasketElements
 {
-    void Enter();
-    void Exit();
-    void Update();
+    public interface IBasketBehavior
+    {
+        void Enter();
+        void Exit();
+        void Update();
+    }
 }

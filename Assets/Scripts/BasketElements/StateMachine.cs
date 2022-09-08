@@ -5,7 +5,7 @@ namespace BasketElements
 {
     public class StateMachine
     {
-        private Basket _basket;
+        private readonly Basket _basket;
         private Dictionary<Type, IBasketBehavior> _behaviors;
         private IBasketBehavior _behaviorCurrent;
 
@@ -24,14 +24,6 @@ namespace BasketElements
             _behaviors[typeof(BasketPitcher)] = new BasketPitcher(_basket);
         }
 
-        private void SetBehavior(IBasketBehavior behavior)
-        {
-            _behaviorCurrent?.Exit();
-
-            _behaviorCurrent = behavior;
-            _behaviorCurrent.Enter();
-        }
-
         private void SetBehaviorByDefault()
         {
             SetBehaviorCatcher();
@@ -41,6 +33,14 @@ namespace BasketElements
         {
             var type = typeof(T);
             return _behaviors[type];
+        }
+
+        private void SetBehavior(IBasketBehavior behavior)
+        {
+            _behaviorCurrent?.Exit();
+
+            _behaviorCurrent = behavior;
+            _behaviorCurrent.Enter();
         }
 
         public void SetBehaviorCatcher()
