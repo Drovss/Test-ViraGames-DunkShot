@@ -98,6 +98,17 @@ public class GameManager : MonoBehaviour
 
         return force;
     }
+
+    public void UpdatePosition(Transform tr)
+    {
+        var y = Instance.Ball.transform.position.y;
+        if (y > tr.position.y)
+        {
+            var position = tr.position;
+            position = new Vector3(position.x, y, position.z);
+            tr.position = position;
+        }
+    }
     
     
 }

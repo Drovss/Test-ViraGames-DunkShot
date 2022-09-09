@@ -6,12 +6,6 @@ public class CameraMover : MonoBehaviour
 
     private void LateUpdate()
     {
-        var cameraY = GameManager.Instance.Ball.transform.position.y;
-        if (cameraY > _camera.position.y)
-        {
-            var position = _camera.position;
-            position = new Vector3(position.x, cameraY, position.z);
-            _camera.position = position;
-        }
+        GameManager.Instance.UpdatePosition(_camera);
     }
 }
