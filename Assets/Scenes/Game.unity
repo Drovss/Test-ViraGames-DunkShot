@@ -186,6 +186,7 @@ MonoBehaviour:
   _pushForce: 4
   _minForce: 1
   _maxForce: 10
+  _minDistance: 0.5
   StartMoveEvent:
     m_PersistentCalls:
       m_Calls: []

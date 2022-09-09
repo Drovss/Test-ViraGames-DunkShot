@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _pushForce;
     [SerializeField] private float _minForce;
     [SerializeField] private float _maxForce;
+    [SerializeField] private float _minDistance;
 
     [HideInInspector] public UnityEvent  StartMoveEvent;
     [HideInInspector] public UnityEvent <Vector2> PushEvent;
@@ -77,6 +78,8 @@ public class GameManager : MonoBehaviour
     }
     private void OnDragEnd()
     {
+        if (_distance < _minDistance) return;
+        
         PushEvent?.Invoke(NormalizeForce(_force));
     }
 

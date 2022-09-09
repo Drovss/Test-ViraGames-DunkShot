@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BasketElements;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class Spawner : MonoBehaviour
     {
         InitBaskets();
         SetBasketsPosition();
+        SubscribeOnBasket();
         SetPitcherState();
     }
 
@@ -73,5 +75,20 @@ public class Spawner : MonoBehaviour
             _currentPosition.z);
 
         return position;
+    }
+
+    private void SubscribeOnBasket()
+    {
+        foreach (var basket in _basketsQueue)
+        {
+            basket.CatchBallEvent.AddListener(UpdateBasketPosition);
+        }
+    }
+
+    private void UpdateBasketPosition()
+    {
+        if (_basketsQueue.Peek().Ball) return;
+        
+        SetNextBasketPosition();
     }
 }
