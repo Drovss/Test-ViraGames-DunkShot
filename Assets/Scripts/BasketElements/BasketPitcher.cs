@@ -74,6 +74,8 @@ namespace BasketElements
             _basket.Ball.DeactivateRb();
             _basket.Ball.SetPosition(_basket.IdlePosition.position);
             _basket.Ball.transform.parent = _basket.BasketTransform;
+
+            GameManager.Instance.Ball = _basket.Ball;
         }
         
         private async void Shoot(Vector2 force)

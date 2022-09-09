@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
     private Vector2 _direction;
     private Vector2 _force;
     private float _distance;
+    
+    public Ball Ball { get; set; }
 
     private void Start()
     {
