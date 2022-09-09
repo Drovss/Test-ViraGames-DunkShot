@@ -28,7 +28,12 @@ namespace BasketElements
         {
             CatchZone.CatchBallEvent.RemoveListener(CatchBall);
         }
-        
+
+        public void SetPosition(Vector3 position)
+        {
+            BasketTransform.position = position;
+        }
+
         private void CatchBall(Ball ball)
         {
             Ball = ball;

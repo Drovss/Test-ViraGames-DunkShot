@@ -222,10 +222,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _basketPrefab: {fileID: 8675330479548363690, guid: 332675586aa238e48b52eb95a5d6302a, type: 3}
-  _ballPrefab: {fileID: 7229550228690965312, guid: 845be988bf3d36a40ad6a56fb4f5e78a, type: 3}
   _startPosition: {fileID: 42243309}
   _stepVertical: 2
   _stepHorizontal: 2.5
+  _countBasket: 2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
