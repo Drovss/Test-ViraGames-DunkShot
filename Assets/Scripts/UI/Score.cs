@@ -10,9 +10,13 @@ namespace UI
 
         private int _score;
         private int _scoreStars;
+        private readonly string _scoreStarsKey= "ScoreStars";
 
         private void Start()
         {
+            _scoreStars = PlayerPrefs.GetInt(_scoreStarsKey, 0);
+            PrintScoreStars();
+            
             GameManager.Instance.BasketCatchBallEvent.AddListener(UpScore);
             GameManager.Instance.BasketCatchStarEvent.AddListener(UpScoreStars);
         }
@@ -26,6 +30,12 @@ namespace UI
         private void UpScoreStars()
         {
             _scoreStars++;
+            PlayerPrefs.SetInt(_scoreStarsKey, _scoreStars);
+            PrintScoreStars();
+        }
+
+        private void PrintScoreStars()
+        {
             _scoreStarsText.SetText(_scoreStars.ToString());
         }
     }
