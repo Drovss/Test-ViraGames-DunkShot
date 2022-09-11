@@ -90,5 +90,10 @@ namespace BasketElements
             await Task.Delay(1000);
             _basket.StateMachine.SetBehaviorCatcher();
         }
+
+        private void ResetBallPosition()
+        {
+            GameManager.Instance.Ball.transform.position = _basket.ResetPosition.position;
+        }
     }
 }

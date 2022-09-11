@@ -21,14 +21,14 @@ namespace UI
 
         private void EnablePause()
         {
-            Time.timeScale = 0;
+            StopTime();
             ShowPanel(_pausePanel.gameObject);
             HidePanel(_uIPanel.gameObject);
         }
         
         private void DisablePause()
         {
-            Time.timeScale = 1;
+            PlayTime();
             HidePanel(_pausePanel.gameObject);
             ShowPanel(_uIPanel.gameObject);
         }

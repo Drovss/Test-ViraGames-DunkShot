@@ -14,5 +14,15 @@ namespace UI
         {
             go.SetActive(false);
         }
+
+        protected void PlayTime()
+        {
+            Time.timeScale = 1;
+        }
+        
+        protected void StopTime()
+        {
+            Time.timeScale = 0;
+        }
     }
 }

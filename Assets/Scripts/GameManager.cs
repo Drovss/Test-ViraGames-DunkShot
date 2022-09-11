@@ -29,6 +29,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent  BasketCatchBallEvent;
     [HideInInspector] public UnityEvent  BasketCatchStarEvent;
     
+    [HideInInspector] public UnityEvent  StartGameEvent;
+    [HideInInspector] public UnityEvent  LoseGameEvent;
+    
     private Camera _camera;
     private bool _isDragging;
 
@@ -104,6 +107,8 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePosition(Transform tr)
     {
+        if (!Instance.Ball) return;
+        
         var y = Instance.Ball.transform.position.y;
         if (y > tr.position.y)
         {

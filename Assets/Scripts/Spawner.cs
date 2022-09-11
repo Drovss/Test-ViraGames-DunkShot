@@ -19,6 +19,11 @@ public class Spawner : MonoBehaviour
     
     private void Start()
     {
+        GameManager.Instance.StartGameEvent.AddListener(InitSpawner);
+    }
+
+    private void InitSpawner()
+    {
         InitBaskets();
         SetBasketsPosition();
         SubscribeOnBasket();

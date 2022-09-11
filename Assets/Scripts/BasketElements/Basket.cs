@@ -8,6 +8,7 @@ namespace BasketElements
     {
         public GameObject BallPrefab;
         public Transform IdlePosition;
+        public Transform ResetPosition;
         public Transform BasketTransform;
         public Trajectory Trajectory;
         public CatchZone CatchZone;
