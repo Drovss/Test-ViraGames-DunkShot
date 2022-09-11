@@ -13,6 +13,7 @@ namespace BasketElements
         public Trajectory Trajectory;
         public CatchZone CatchZone;
         public Star Star;
+        public AudioSource Audio;
 
         [NonSerialized] public Ball Ball;
         public StateMachine StateMachine;
@@ -47,7 +48,7 @@ namespace BasketElements
             Ball.DeactivateRb();
             Ball.SetPosition(IdlePosition.position);
             Ball.transform.parent = BasketTransform;
-            
+            Audio.Play();
             StateMachine.SetBehaviorPitcher();
             
             CatchBallEvent.Invoke();
