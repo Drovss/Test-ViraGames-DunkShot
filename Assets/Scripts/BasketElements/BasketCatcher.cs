@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace BasketElements
+﻿namespace BasketElements
 {
     public class BasketCatcher: IBasketBehavior
     {
@@ -16,7 +14,7 @@ namespace BasketElements
 
         public void Exit()
         {
-            
+            _basket.Star.Deactivate();
         }
 
         public void Update()

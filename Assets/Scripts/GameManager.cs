@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
-    
+ 
     [SerializeField] private float _pushForce;
     [SerializeField] private float _minForce;
     [SerializeField] private float _maxForce;
@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent  StartMoveEvent;
     [HideInInspector] public UnityEvent <Vector2> PushEvent;
     [HideInInspector] public UnityEvent <Vector2> UpdateTrajectoryEvent;
+    
+    [HideInInspector] public UnityEvent  BasketCatchBallEvent;
+    [HideInInspector] public UnityEvent  BasketCatchStarEvent;
     
     private Camera _camera;
     private bool _isDragging;
@@ -109,7 +112,5 @@ public class GameManager : MonoBehaviour
             tr.position = position;
         }
     }
-    
-    
 }
 

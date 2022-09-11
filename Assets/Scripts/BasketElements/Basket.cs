@@ -11,11 +11,12 @@ namespace BasketElements
         public Transform BasketTransform;
         public Trajectory Trajectory;
         public CatchZone CatchZone;
+        public Star Star;
 
         [NonSerialized] public Ball Ball;
         public StateMachine StateMachine;
 
-        public UnityEvent CatchBallEvent;
+        [HideInInspector] public UnityEvent CatchBallEvent;
 
         private void Awake()
         {

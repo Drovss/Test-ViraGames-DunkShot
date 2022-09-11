@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BasketElements;
 using UnityEngine;
@@ -9,11 +8,14 @@ public class Spawner : MonoBehaviour
     [SerializeField] private GameObject _basketPrefab;
     [SerializeField] private Transform _startPosition;
     [SerializeField] private float _stepVertical;
-    [SerializeField] private float _stepHorizontal;
     [SerializeField] private int _countBasket;
+    [SerializeField] private float _maxDistanceFromCenter;
+    [SerializeField] private float _minDistanceFromCenter;
 
     private readonly Queue<Basket> _basketsQueue = new Queue<Basket>();
     private Vector3 _currentPosition;
+
+    private bool _rightPosition;
     
     private void Start()
     {
@@ -64,15 +66,32 @@ public class Spawner : MonoBehaviour
         var basket = _basketsQueue.Dequeue();
         _currentPosition = GetNewPosition();
         basket.SetPosition(_currentPosition);
+        basket.Star.Activate();
         _basketsQueue.Enqueue(basket);
     }
 
     private Vector3 GetNewPosition()
     {
-        var position = new Vector3(
-            Random.Range(-_stepHorizontal, _stepHorizontal),
-            _currentPosition.y + _stepVertical,
-            _currentPosition.z);
+        Vector3 position;
+        
+        if (_rightPosition)
+        {
+            position = new Vector3(
+                Random.Range(_minDistanceFromCenter, _maxDistanceFromCenter),
+                _currentPosition.y + _stepVertical,
+                _currentPosition.z);
+            
+            _rightPosition = false;
+        }
+        else
+        {
+            position = new Vector3(
+                Random.Range(-_maxDistanceFromCenter, -_minDistanceFromCenter),
+                _currentPosition.y + _stepVertical,
+                _currentPosition.z);
+            
+            _rightPosition = true;
+        }
 
         return position;
     }
@@ -90,5 +109,7 @@ public class Spawner : MonoBehaviour
         if (_basketsQueue.Peek().Ball) return;
         
         SetNextBasketPosition();
+        
+        GameManager.Instance.BasketCatchBallEvent.Invoke();
     }
 }
